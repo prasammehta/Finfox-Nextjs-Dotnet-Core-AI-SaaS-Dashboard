@@ -145,7 +145,7 @@ psql --version  # Should be 14+
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Finfox-Nextjs-Dotnet-Core-AI-SaaS-Dashboard.git
+git clone https://github.com/prasammehta/Finfox-Nextjs-Dotnet-Core-AI-SaaS-Dashboard.git
 cd Finfox-Nextjs-Dotnet-Core-AI-SaaS-Dashboard
 ```
 
@@ -219,11 +219,11 @@ dotnet build
 dotnet run
 ```
 
-Backend will be available at: `http://localhost:5000`
+Backend will be available at: `http://localhost:5252`
 
 **Verify API is running:**
 ```bash
-curl http://localhost:5000/api/health
+curl http://localhost:5252/api/health
 ```
 
 ### Step 3: Frontend Setup
@@ -256,7 +256,7 @@ Edit `.env.local`:
 
 ```env
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:5252/api
 NEXT_PUBLIC_API_TIMEOUT=30000
 
 # Authentication
@@ -297,7 +297,7 @@ All API endpoints (except `/auth/login` and `/auth/register`) require JWT authen
 #### Get JWT Token
 
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:5252/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -320,7 +320,7 @@ curl -X POST http://localhost:5000/api/auth/login \
 #### Use Token in Requests
 
 ```bash
-curl -X GET http://localhost:5000/api/dashboard/metrics \
+curl -X GET http://localhost:5252/api/dashboard/metrics \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -368,7 +368,7 @@ curl -X GET http://localhost:5000/api/dashboard/metrics \
 
 ### Full API Documentation
 
-Interactive API documentation is available at: `http://localhost:5000/swagger`
+Interactive API documentation is available at: `http://localhost:5252/swagger`
 
 ---
 
@@ -377,7 +377,7 @@ Interactive API documentation is available at: `http://localhost:5000/swagger`
 ### 1. Test Chat Endpoint
 
 ```bash
-curl -X POST http://localhost:5000/api/ai/chat \
+curl -X POST http://localhost:5252/api/ai/chat \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -388,7 +388,7 @@ curl -X POST http://localhost:5000/api/ai/chat \
 ### 2. Test Intent Extraction
 
 ```bash
-curl -X POST http://localhost:5000/api/ai/extract-intent \
+curl -X POST http://localhost:5252/api/ai/extract-intent \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -399,7 +399,7 @@ curl -X POST http://localhost:5000/api/ai/extract-intent \
 ### 3. Get Chat History
 
 ```bash
-curl -X GET http://localhost:5000/api/ai/history \
+curl -X GET http://localhost:5252/api/ai/history \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
 ```
 
@@ -545,7 +545,7 @@ frontend/
 
 ```env
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_API_URL=http://localhost:5252/api
 
 # App Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -677,7 +677,7 @@ aws s3 sync out/ s3://finfox-bucket/
 
 - [Backend Detailed Guide](./Backend-ReadMe.md) - Backend architecture, AI integration details
 - [Frontend Detailed Guide](./Frontend-ReadMe.md) - Frontend components, theming system
-- [API Documentation](http://localhost:5000/swagger) - Interactive API docs (when running locally)
+- [API Documentation](http://localhost:5252/swagger) - Interactive API docs (when running locally)
 
 ---
 
@@ -717,7 +717,7 @@ git push origin feature/my-feature
 | "Cannot connect to PostgreSQL" | Verify PostgreSQL is running and connection string is correct |
 | "OpenAI API key not configured" | Add key to `appsettings.json` and restart |
 | "Migration failed" | Run `dotnet ef database drop` then `dotnet ef database update` |
-| "Port 5000 already in use" | Change port in `launchSettings.json` or kill process on port 5000 |
+| "Port 5252 already in use" | Change port in `launchSettings.json` or kill process on port 5252 |
 
 ### Frontend Issues
 
@@ -765,14 +765,14 @@ npm run dev
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 
 ## 👨‍💼 Support & Contact
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/Finfox/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/Finfox/discussions)
+- **Issues**: [GitHub Issues](https://github.com/prasammehta/Finfox/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/prasammehta/Finfox/discussions)
 - **Email**: support@finfox.com
 
 ---

@@ -799,21 +799,12 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE
 - ✅ Theme customization
 
 ### Phase 2 (Planned)
-- 📱 Mobile app (React Native)
-- 🔔 Push notifications
+- 📱 Bug fixes
+- 🔔 Add recurring transaction postgres scheduler
 - 📧 Email notifications
-- 🔄 Advanced recurring transactions
-- 💡 Budget recommendations
-
-### Phase 3 (Future)
-- 🌐 Multi-currency support
-- 🏦 Bank integration APIs
-- 📊 Advanced reporting
-- 🤖 Predictive analytics
-- 🔐 Multi-factor authentication
+- 🔄 Google auth
+- 💡 UI & Chart Enhancements
 
 ---
-
-**Made with ❤️ by the Finfox Team**
 
 Last Updated: January 2025

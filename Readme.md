@@ -32,7 +32,7 @@ Finfox is a comprehensive financial management platform that combines a modern w
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| **Framework** | Next.js | 15.4.7 |
+| **Framework** | Next.js | 15.5.11 |
 | **Runtime** | React | 19.1.0 |
 | **Language** | TypeScript | 5.x |
 | **Styling** | Tailwind CSS | 4.1.11 |
@@ -41,7 +41,9 @@ Finfox is a comprehensive financial management platform that combines a modern w
 | **Form Management** | React Hook Form | 7.62.0 |
 | **Validation** | Zod | 4.0.15 |
 | **Charts** | Recharts | 2.15.4 |
-| **Icons** | Lucide React | Latest |
+| **Icons** | Lucide React | 0.536.0 |
+| **HTTP Client** | Axios | 1.13.2 |
+| **Theme Management** | next-themes | 0.4.6 |
 | **Utilities** | Date-fns | 4.1.0 |
 | **Notifications** | Sonner | 2.0.7 |
 

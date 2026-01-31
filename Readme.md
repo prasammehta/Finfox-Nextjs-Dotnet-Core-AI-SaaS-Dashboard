@@ -804,7 +804,3 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE
 - 📧 Email notifications
 - 🔄 Google auth
 - 💡 UI & Chart Enhancements
-
----
-
-Last Updated: January 2025

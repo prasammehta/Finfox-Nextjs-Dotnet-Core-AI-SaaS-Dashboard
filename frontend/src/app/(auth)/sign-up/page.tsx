@@ -10,9 +10,9 @@ export default function SignUpPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <Link href="/" className="flex items-center gap-2 font-medium">
             <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-              <Logo size={24} />
+              <Logo size={42} />
             </div>
-            ShadcnStore
+            Finfox
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -23,7 +23,7 @@ export default function SignUpPage() {
       </div>
       <div className="bg-muted relative hidden lg:block">
         <Image
-          src="https://ui.shadcn.com/placeholder.svg"
+          src="/background-template.png"
           alt="Image"
           fill
           className="object-cover dark:brightness-[0.95] dark:invert"

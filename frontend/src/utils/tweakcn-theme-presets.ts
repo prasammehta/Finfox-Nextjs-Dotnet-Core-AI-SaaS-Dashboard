@@ -1,8 +1,8 @@
 import type { ThemePreset } from "../types/theme";
 
 export const tweakcnPresets: Record<string, ThemePreset> = {
-  "finfox-green": {
-    label: "Finfox Green",
+  "green": {
+    label: "Green",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -113,8 +113,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "taskbunny-saffron": {
-    label: "Taskbunny Brown",
+  "saffron": {
+    label: "Saffron",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -227,8 +227,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "deerdiamond-brown": {
-    label: "Deerdiamond Brown",
+  "brown": {
+    label: "Brown",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -341,8 +341,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "social-blue": {
-    label: "Social Blue",
+  "blue": {
+    label: "Blue",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -456,7 +456,7 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
     },
   },
   "basic-black": {
-    label: "Vercel",
+    label: "Black",
     createdAt: "2025-04-13",
     styles: {
       light: {
@@ -543,8 +543,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "beehr-yellow": {
-    label: "Beehr Yellow",
+  "yellow": {
+    label: "Yellow",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -657,8 +657,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "doctor-blue": {
-    label: "Doctor Blue",
+  "d-blue": {
+    label: "D Blue",
     createdAt: "2025-12-15",
     styles: {
       light: {
@@ -771,8 +771,8 @@ export const tweakcnPresets: Record<string, ThemePreset> = {
       },
     },
   },
-  "healthplus-red": {
-    label: "Healthplus Red",
+  "red": {
+    label: "Red",
     createdAt: "2025-12-15",
     styles: {
       light: {

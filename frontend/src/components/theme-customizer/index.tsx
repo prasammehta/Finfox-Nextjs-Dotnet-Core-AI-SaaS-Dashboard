@@ -23,13 +23,13 @@ export function ThemeCustomizer({ open, onOpenChange }: ThemeCustomizerProps) {
   const { config: sidebarConfig, updateConfig: updateSidebarConfig } = useSidebarConfig()
 
   const [activeTab, setActiveTab] = React.useState("theme")
-  const [selectedTweakcnTheme, setSelectedTweakcnTheme] = React.useState("finfox-green")
+  const [selectedTweakcnTheme, setSelectedTweakcnTheme] = React.useState("green")
   const [selectedRadius, setSelectedRadius] = React.useState("0.5rem")
   const handleReset = () => {
     // Complete reset to application defaults
 
     // 1. Reset all state variables to initial values
-    setSelectedTweakcnTheme("finfox-green")
+    setSelectedTweakcnTheme("green")
     setSelectedRadius("0.5rem")
     setBrandColorsValues({}) // Clear brand colors state
 

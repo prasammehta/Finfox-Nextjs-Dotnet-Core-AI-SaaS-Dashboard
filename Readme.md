@@ -787,6 +787,7 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](./LICENSE
 - [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/) - Backend framework
 - [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/) - AI integration
 - [OpenAI](https://openai.com/) - LLM provider
+- [ShadcnStore](https://github.com/silicondeck/shadcn-dashboard-landing-template) - Shadcn Store
 
 ---
 

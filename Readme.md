@@ -2,7 +2,7 @@
 
 A modern, full-stack financial management SaaS application with AI-powered transaction assistance, built with Next.js 15 and .NET 10.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-15.4.7-black)
 ![.NET](https://img.shields.io/badge/.NET-10.0-purple)
 ![Status](https://img.shields.io/badge/status-Active-green)

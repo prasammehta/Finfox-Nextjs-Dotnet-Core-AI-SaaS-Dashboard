@@ -1,0 +1,98 @@
+[
+  {
+    "id": "conv-1",
+    "type": "direct",
+    "participants": ["1"],
+    "name": "FinFox",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-1-4",
+      "content": "Based on your spending patterns, you're doing great! Your savings rate is 25% this month. Keep it up! 🎉",
+      "timestamp": "2024-12-17T15:30:00Z",
+      "senderId": "1"
+    },
+    "unreadCount": 0,
+    "isPinned": true,
+    "isMuted": false
+  },
+  {
+    "id": "conv-2",
+    "type": "direct",
+    "participants": ["2"],
+    "name": "Transactions Bot",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-2-8",
+      "content": "Transaction recorded: Grocery Shopping - ₹150.00 on Dec 1. Your food expenses this month total ₹360.00",
+      "timestamp": "2024-12-17T10:15:00Z",
+      "senderId": "2"
+    },
+    "unreadCount": 1,
+    "isPinned": false,
+    "isMuted": false
+  },
+  {
+    "id": "conv-3",
+    "type": "direct",
+    "participants": ["3"],
+    "name": "Bills Bot",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-3-6",
+      "content": "Monthly house rent of ₹1,200.00 is due on Dec 5. Would you like me to set a reminder? 📋",
+      "timestamp": "2024-12-17T09:45:00Z",
+      "senderId": "3"
+    },
+    "unreadCount": 0,
+    "isPinned": false,
+    "isMuted": false
+  },
+  {
+    "id": "conv-4",
+    "type": "direct",
+    "participants": ["4"],
+    "name": "Investments Bot",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-4-3",
+      "content": "Your investment portfolio is up 8.5% this year. Great diversification! Want to add more positions? 📈",
+      "timestamp": "2024-12-17T08:30:00Z",
+      "senderId": "4"
+    },
+    "unreadCount": 0,
+    "isPinned": false,
+    "isMuted": false
+  },
+  {
+    "id": "conv-5",
+    "type": "direct",
+    "participants": ["5"],
+    "name": "Debts Bot",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-5-3",
+      "content": "Your car loan repayment of ₹300.00 is on track. You'll be debt-free in 24 months! 💪",
+      "timestamp": "2024-12-17T07:20:00Z",
+      "senderId": "5"
+    },
+    "unreadCount": 1,
+    "isPinned": false,
+    "isMuted": false
+  },
+  {
+    "id": "conv-6",
+    "type": "direct",
+    "participants": ["6"],
+    "name": "Recurring Transactions Bot",
+    "avatar": "/favicon-dark.png",
+    "lastMessage": {
+      "id": "msg-6-3",
+      "content": "Your recurring monthly expenses total ₹3,445.99. Your monthly income is ₹3,500.00. Savings: ₹54.01 💰",
+      "timestamp": "2024-12-17T06:00:00Z",
+      "senderId": "6"
+    },
+    "unreadCount": 0,
+    "isPinned": false,
+    "isMuted": false
+  }
+]

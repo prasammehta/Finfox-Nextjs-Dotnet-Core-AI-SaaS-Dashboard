@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "name": "FinFox",
+    "email": "finfox@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:30:00Z",
+    "role": "General AI Assistant",
+    "department": "AI Bot",
+    "type": "general",
+    "description": "Your personal AI finance assistant. Ask me anything about your finances, budgeting, or financial planning!"
+  },
+  {
+    "id": "2",
+    "name": "Transactions Bot",
+    "email": "transactions-bot@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:25:00Z",
+    "role": "Transactions Assistant",
+    "department": "AI Bot",
+    "type": "transactions",
+    "description": "Helps you create, read, update, and delete transactions. Manage your income and expenses efficiently."
+  },
+  {
+    "id": "3",
+    "name": "Bills Bot",
+    "email": "bills-bot@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:20:00Z",
+    "role": "Bills Assistant",
+    "department": "AI Bot",
+    "type": "bills",
+    "description": "Manage your bills and invoices. Create, update, delete, and track all your billing information."
+  },
+  {
+    "id": "4",
+    "name": "Investments Bot",
+    "email": "investments-bot@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:15:00Z",
+    "role": "Investments Assistant",
+    "department": "AI Bot",
+    "type": "investments",
+    "description": "Manage your investment portfolio. Add, update, delete, and analyze your investment positions."
+  },
+  {
+    "id": "5",
+    "name": "Debts Bot",
+    "email": "debts-bot@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:10:00Z",
+    "role": "Debts Assistant",
+    "department": "AI Bot",
+    "type": "debts",
+    "description": "Track and manage your debts. Create repayment plans and monitor your debt reduction progress."
+  },
+  {
+    "id": "6",
+    "name": "Recurring Transactions Bot",
+    "email": "recurring-bot@ai.example.com",
+    "avatar": "/favicon.png",
+    "status": "online",
+    "lastSeen": "2024-12-17T10:05:00Z",
+    "role": "Recurring Transactions Assistant",
+    "department": "AI Bot",
+    "type": "recurring-transactions",
+    "description": "Manage recurring bills, subscriptions, and income. Set up and track automatic transactions."
+  }
+]

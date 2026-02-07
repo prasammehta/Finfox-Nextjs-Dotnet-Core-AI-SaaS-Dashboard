@@ -35,6 +35,7 @@ import { createBill, updateBill } from "@/services/billService"
 import { toast } from "sonner"
 import { generateInvoiceNumber } from "../utils/invoice-number-generator"
 import { Bill } from "@/types/schema"
+import { toUtcMidnight, getLocalDateString } from "@/lib/date-utils"
 
 interface BillCompany {
   billCompanyId: number
@@ -84,8 +85,8 @@ export function BillFormDialog({
       client: "",
       billFromId: "",
       billToId: "",
-      issueDate: "",
-      dueDate: "",
+      issueDate: getLocalDateString(),
+      dueDate: getLocalDateString(),
       gstRate: "0",
       tdsPercent: "0",
       subtotal: "0",
@@ -133,8 +134,8 @@ export function BillFormDialog({
         client: "",
         billFromId: "",
         billToId: "",
-        issueDate: "",
-        dueDate: "",
+        issueDate: getLocalDateString(),
+        dueDate: getLocalDateString(),
         gstRate: "0",
         tdsPercent: "0",
         subtotal: "0",
@@ -244,8 +245,8 @@ export function BillFormDialog({
           billToId: parseInt(data.billToId),
           invoiceNumber: data.invoiceNumber,
           client: data.client,
-          issueDate: new Date(data.issueDate).toISOString(),
-          dueDate: new Date(data.dueDate).toISOString(),
+          issueDate: toUtcMidnight(data.issueDate),
+          dueDate: toUtcMidnight(data.dueDate),
           gstRate: parseFloat(data.gstRate),
           tdsPercent: parseFloat(data.tdsPercent),
           subtotal: subtotal,
@@ -278,8 +279,8 @@ export function BillFormDialog({
           billToId: parseInt(data.billToId),
           invoiceNumber: data.invoiceNumber,
           client: data.client,
-          issueDate: new Date(data.issueDate).toISOString(),
-          dueDate: new Date(data.dueDate).toISOString(),
+          issueDate: toUtcMidnight(data.issueDate),
+          dueDate: toUtcMidnight(data.dueDate),
           gstRate: parseFloat(data.gstRate),
           tdsPercent: parseFloat(data.tdsPercent),
           subtotal: subtotal,

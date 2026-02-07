@@ -1,37 +1,46 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo } from "react"
 import { Calendar } from "@/components/ui/calendar"
 
 interface DatePickerProps {
+  currentDate?: Date
   selectedDate?: Date
   onDateSelect?: (date: Date) => void
+  onMonthChange?: (date: Date) => void
   events?: Array<{ date: Date; count: number }>
 }
 
-export function DatePicker({ selectedDate, onDateSelect, events = [] }: DatePickerProps) {
-  const [date, setDate] = useState<Date | undefined>(selectedDate || new Date())
-
+export function DatePicker({
+  currentDate,
+  selectedDate,
+  onDateSelect,
+  onMonthChange,
+  events = []
+}: DatePickerProps) {
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      setDate(selectedDate)
       onDateSelect?.(selectedDate)
     }
   }
 
   // Create a map of dates with events for styling
-  const eventDates = events.reduce((acc, event) => {
-    const dateKey = event.date.toDateString()
-    acc[dateKey] = event.count
-    return acc
-  }, {} as Record<string, number>)
+  const eventDates = useMemo(() => {
+    return events.reduce((acc, event) => {
+      const dateKey = event.date.toDateString()
+      acc[dateKey] = event.count
+      return acc
+    }, {} as Record<string, number>)
+  }, [events])
 
   return (
     <div className="flex justify-center">
-      <Calendar 
+      <Calendar
         mode="single"
-        selected={date}
+        selected={selectedDate}
         onSelect={handleDateSelect}
+        month={currentDate}
+        onMonthChange={onMonthChange}
         className="w-full [&_[role=gridcell]_button]:cursor-pointer [&_button]:cursor-pointer"
         modifiers={{
           hasEvents: (date) => {

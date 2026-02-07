@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { CalendarSidebar } from "./calendar-sidebar"
 import { CalendarMain } from "./calendar-main"
 import { EventForm } from "./event-form"
@@ -12,14 +12,33 @@ interface CalendarProps {
   events: CalendarEvent[]
   eventDates: Array<{ date: Date; count: number }>
   loading?: boolean
+  currentDate?: Date
+  onCurrentDateChange?: (date: Date) => void
 }
 
-export function Calendar({ events, eventDates, loading = false }: CalendarProps) {
+export function Calendar({
+  events,
+  eventDates,
+  loading = false,
+  currentDate: externalDate,
+  onCurrentDateChange
+}: CalendarProps) {
   const calendar = useCalendar(events)
   const [visibleCalendars, setVisibleCalendars] = useState({
     transactions: true,
     "recurring-transactions": true
   })
+
+  // Use external date if provided, falling back to internal calendar state
+  const effectiveCurrentDate = externalDate || calendar.currentDate
+  const handleCurrentDateChange = (date: Date) => {
+    // If we have an external handler, call it (state will flow back via props)
+    // We also update internal state just in case, but prioritize external
+    if (onCurrentDateChange) {
+      onCurrentDateChange(date)
+    }
+    calendar.setCurrentDate(date)
+  }
 
   // Filter events based on visible calendars
   const filteredEvents = useMemo(() => {
@@ -51,20 +70,23 @@ export function Calendar({ events, eventDates, loading = false }: CalendarProps)
           {/* Desktop Sidebar - Hidden on mobile/tablet, shown on extra large screens */}
           <div className="hidden xl:block w-80 shrink-0 border-r">
             <CalendarSidebar
+              currentDate={effectiveCurrentDate}
+              onCurrentDateChange={handleCurrentDateChange}
               selectedDate={calendar.selectedDate}
               onDateSelect={calendar.handleDateSelect}
               onNewCalendar={calendar.handleNewCalendar}
-              onNewEvent={calendar.handleNewEvent}
               events={eventDates}
               className="h-full"
               onCalendarToggle={handleCalendarToggle}
               visibleCalendars={visibleCalendars}
             />
           </div>
-          
+
           {/* Main Calendar Panel */}
           <div className="flex-1 min-w-0">
-            <CalendarMain 
+            <CalendarMain
+              currentDate={effectiveCurrentDate}
+              onCurrentDateChange={handleCurrentDateChange}
               selectedDate={calendar.selectedDate}
               onDateSelect={calendar.handleDateSelect}
               onMenuClick={() => calendar.setShowCalendarSheet(true)}
@@ -85,10 +107,11 @@ export function Calendar({ events, eventDates, loading = false }: CalendarProps)
               </SheetDescription>
             </SheetHeader>
             <CalendarSidebar
+              currentDate={effectiveCurrentDate}
+              onCurrentDateChange={handleCurrentDateChange}
               selectedDate={calendar.selectedDate}
               onDateSelect={calendar.handleDateSelect}
               onNewCalendar={calendar.handleNewCalendar}
-              onNewEvent={calendar.handleNewEvent}
               events={eventDates}
               className="h-full"
               onCalendarToggle={handleCalendarToggle}

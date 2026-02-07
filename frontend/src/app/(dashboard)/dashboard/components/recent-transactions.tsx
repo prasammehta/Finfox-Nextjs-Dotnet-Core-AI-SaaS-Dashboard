@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useTransactions } from "@/hooks/api/useTransactions"
 import { Skeleton } from "@/components/ui/skeleton"
+import { formatLocalTime } from "@/lib/date-utils"
 
 const getCategoryIcon = (category: string) => {
   const icons: Record<string, string> = {
@@ -31,13 +32,13 @@ const getTypeColor = (type: string) => {
 
 export function RecentTransactions() {
   const { data: transactions, loading } = useTransactions()
-  
+
   const recentTransactions = React.useMemo(() => {
     return Array.isArray(transactions)
       ? transactions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5)
       : []
   }, [transactions])
-   
+
   return (
     <Card>
       <CardHeader>
@@ -67,7 +68,7 @@ export function RecentTransactions() {
                       {transaction.description || transaction.category || "Transaction"}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(transaction.createdAt).toLocaleDateString()}
+                      {formatLocalTime(transaction.createdAt)}
                     </p>
                   </div>
                 </div>
@@ -108,4 +109,3 @@ export function RecentTransactions() {
     </Card>
   )
 }
-  

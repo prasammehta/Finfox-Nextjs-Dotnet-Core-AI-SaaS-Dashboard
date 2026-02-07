@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Label, Pie, PieChart, Sector } from "recharts"
+import { Label, Pie, PieChart, Sector, Cell } from "recharts"
 import type { PieSectorDataItem } from "recharts/types/polar/Pie"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartStyle, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
@@ -10,47 +10,70 @@ import { useTransactions } from "@/hooks/api/useTransactions"
 import { Skeleton } from "@/components/ui/skeleton"
 
 const chartConfig = {
-  groceries: { label: "Groceries", color: "hsl(var(--chart-1))" },
-  utilities: { label: "Utilities", color: "hsl(var(--chart-2))" },
-  entertainment: { label: "Entertainment", color: "hsl(var(--chart-3))" },
-  transportation: { label: "Transportation", color: "hsl(var(--chart-4))" },
-  healthcare: { label: "Healthcare", color: "hsl(var(--chart-5))" },
-  other: { label: "Other", color: "hsl(var(--chart-6))" },
-}
+  1: { label: "Category 1", color: "var(--chart-1)" },
+  2: { label: "Category 2", color: "var(--chart-2)" },
+  3: { label: "Category 3", color: "var(--chart-3)" },
+  4: { label: "Category 4", color: "var(--chart-4)" },
+  5: { label: "Category 5", color: "var(--chart-5)" },
+  other: { label: "Other", color: "var(--chart-1)" },
+} as any
 
 export function RevenueBreakdown() {
   const id = "expense-breakdown"
-  const { data: transactions, loading } = useTransactions()
-  const [activeCategory, setActiveCategory] = React.useState("groceries")
+  const { data: transactions, loading } = useTransactions({}, 100)
+  const [activeCategory, setActiveCategory] = React.useState("")
 
   const expenseData = React.useMemo(() => {
-    const expenses = Array.isArray(transactions) 
+    const expenses = Array.isArray(transactions)
       ? transactions
-          .filter((t) => t.type?.toLowerCase() === "expense")
-          .reduce((acc: Record<string, number>, t) => {
-            const category = t.category?.toLowerCase() || "other"
-            acc[category] = (acc[category] || 0) + (t.amount || 0)
-            return acc
-          }, {})
+        .filter((t) => t.type?.toLowerCase() === "expense")
+        .reduce((acc: Record<string, number>, t) => {
+          const category = t.category?.toLowerCase() || "other"
+          acc[category] = (acc[category] || 0) + (t.amount || 0)
+          return acc
+        }, {})
       : {}
 
     const total = Object.values(expenses).reduce((a, b) => a + b, 0)
 
-    return Object.entries(expenses).map(([category, amount]) => ({
-      category,
-      value: total > 0 ? Math.round((amount / total) * 100) : 0,
-      amount,
-      fill: chartConfig[category as keyof typeof chartConfig]?.color || chartConfig.other.color,
-    }))
+    const data = Object.entries(expenses).map(([category, amount], index) => {
+      const colorIndex = (index % 5) + 1
+      return {
+        category,
+        value: total > 0 ? Math.round((amount / total) * 100) : 0,
+        amount,
+        fill: `var(--chart-${colorIndex})`,
+        colorKey: colorIndex.toString()
+      }
+    })
+
+    return data.sort((a, b) => b.value - a.value)
   }, [transactions])
+
+  React.useEffect(() => {
+    if (expenseData.length > 0 && !activeCategory) {
+      setActiveCategory(expenseData[0].category)
+    }
+  }, [expenseData, activeCategory])
 
   const categories = React.useMemo(() => expenseData.map((item) => item.category), [expenseData])
 
   const activeIndex = expenseData.findIndex((item) => item.category === activeCategory)
 
+  // Dynamic config for tooltip/legend labels
+  const dynamicConfig = React.useMemo(() => {
+    const config = { ...chartConfig }
+    expenseData.forEach((item) => {
+      config[item.category] = {
+        label: item.category.charAt(0).toUpperCase() + item.category.slice(1),
+        color: item.fill
+      }
+    })
+    return config
+  }, [expenseData])
+
   return (
     <Card data-chart={id} className="flex flex-col cursor-pointer">
-      <ChartStyle id={id} config={chartConfig} />
       <CardHeader className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 pb-2">
         <div>
           <CardTitle>Expense Breakdown</CardTitle>
@@ -63,8 +86,8 @@ export function RevenueBreakdown() {
             </SelectTrigger>
             <SelectContent>
               {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                <SelectItem key={category} value={category} className="capitalize">
+                  {category}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -76,7 +99,7 @@ export function RevenueBreakdown() {
           <div className="flex justify-center">
             <ChartContainer
               id={id}
-              config={chartConfig}
+              config={dynamicConfig}
               className="mx-auto aspect-square w-full max-w-[300px]"
             >
               <PieChart>
@@ -89,8 +112,10 @@ export function RevenueBreakdown() {
                   dataKey="value"
                   nameKey="category"
                   innerRadius={60}
+                  outerRadius={80}
                   strokeWidth={5}
                   activeIndex={activeIndex}
+                  onClick={(_, index) => setActiveCategory(expenseData[index].category)}
                   activeShape={({
                     outerRadius = 0,
                     ...props
@@ -100,11 +125,14 @@ export function RevenueBreakdown() {
                       <Sector
                         {...props}
                         outerRadius={outerRadius + 25}
-                        fill="hsl(var(--muted))"
+                        innerRadius={outerRadius + 12}
                       />
                     </g>
                   )}
                 >
+                  {expenseData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.fill} />
+                  ))}
                   <Label
                     content={({ viewBox }) => {
                       if (viewBox && "cx" in viewBox && "cy" in viewBox) {
@@ -168,4 +196,3 @@ export function RevenueBreakdown() {
     </Card>
   )
 }
-          

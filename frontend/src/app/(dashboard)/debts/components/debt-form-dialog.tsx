@@ -34,6 +34,7 @@ import { debtFormSchema, type DebtFormValues } from "@/types/zod-schema"
 import { createDebt, updateDebt } from "@/services/debtService"
 import { toast } from "sonner"
 import { Debt } from "@/types/schema"
+import { toUtcMidnight, getLocalDateString } from "@/lib/date-utils"
 
 interface DebtFormDialogProps {
   debt?: Debt | null
@@ -66,7 +67,7 @@ export function DebtFormDialog({
       debtType: "",
       status: "",
       paidAmount: "0",
-      date: "",
+      date: getLocalDateString(),
     },
   })
 
@@ -88,7 +89,7 @@ export function DebtFormDialog({
         debtType: "",
         status: "",
         paidAmount: "0",
-        date: "",
+        date: getLocalDateString(),
       })
     }
   }, [debt, open, isEditMode, form])
@@ -106,7 +107,7 @@ export function DebtFormDialog({
           debtType: data.debtType,
           status: data.status,
           paidAmount: parseFloat(data.paidAmount),
-          date: new Date(data.date).toISOString(),
+          date: toUtcMidnight(data.date),
         }
 
         await updateDebt(debt.debtId, debtData)
@@ -126,7 +127,7 @@ export function DebtFormDialog({
           debtType: data.debtType,
           status: data.status,
           paidAmount: parseFloat(data.paidAmount),
-          date: new Date(data.date).toISOString(),
+          date: toUtcMidnight(data.date),
         }
 
         await createDebt(debtData)

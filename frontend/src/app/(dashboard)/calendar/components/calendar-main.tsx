@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import {
   ChevronLeft,
   ChevronRight,
@@ -40,6 +40,8 @@ import { type CalendarEvent } from "@/hooks/api/useCalendarEvents"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface CalendarMainProps {
+  currentDate: Date
+  onCurrentDateChange: (date: Date) => void
   selectedDate?: Date
   onDateSelect?: (date: Date) => void
   onMenuClick?: () => void
@@ -48,11 +50,30 @@ interface CalendarMainProps {
   loading?: boolean
 }
 
-export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, onEventClick, loading = false }: CalendarMainProps) {
+export function CalendarMain({
+  currentDate,
+  onCurrentDateChange,
+  selectedDate,
+  onDateSelect,
+  onMenuClick,
+  events,
+  onEventClick,
+  loading = false
+}: CalendarMainProps) {
   // Use real events data, fallback to empty array
-  const allEvents: CalendarEvent[] = events || []
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const [currentDate, setCurrentDate] = useState(selectedDate || new Date())
+  const allEvents = useMemo(() => {
+    const baseEvents = events || []
+    if (!searchQuery.trim()) return baseEvents
+
+    const query = searchQuery.toLowerCase()
+    return baseEvents.filter(event =>
+      event.title.toLowerCase().includes(query) ||
+      (event.description && event.description.toLowerCase().includes(query))
+    )
+  }, [events, searchQuery])
+
   const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "list">("month")
   const [showEventDialog, setShowEventDialog] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
@@ -60,31 +81,46 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
   const [selectedDayEvents, setSelectedDayEvents] = useState<CalendarEvent[]>([])
   const [selectedDayDate, setSelectedDayDate] = useState<Date | null>(null)
 
-  const monthStart = startOfMonth(currentDate)
-  const monthEnd = endOfMonth(currentDate)
+  const { monthStart, monthEnd, calendarStart, calendarEnd, calendarDays } = useMemo(() => {
+    const mStart = startOfMonth(currentDate)
+    const mEnd = endOfMonth(currentDate)
 
-  // Extend to show full weeks (including previous/next month days)
-  const calendarStart = new Date(monthStart)
-  calendarStart.setDate(calendarStart.getDate() - monthStart.getDay())
+    const cStart = new Date(mStart)
+    cStart.setDate(cStart.getDate() - mStart.getDay())
 
-  const calendarEnd = new Date(monthEnd)
-  calendarEnd.setDate(calendarEnd.getDate() + (6 - monthEnd.getDay()))
+    const cEnd = new Date(mEnd)
+    cEnd.setDate(cEnd.getDate() + (6 - mEnd.getDay()))
 
-  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+    const cDays = eachDayOfInterval({ start: cStart, end: cEnd })
 
-  const getEventsForDay = (date: Date) => {
-    return allEvents.filter(event => {
-      const eventDate = new Date(event.date)
-      return isSameDay(eventDate, date)
+    return {
+      monthStart: mStart,
+      monthEnd: mEnd,
+      calendarStart: cStart,
+      calendarEnd: cEnd,
+      calendarDays: cDays
+    }
+  }, [currentDate])
+
+  // Group events by date string for O(1) lookup
+  const eventsByDate = useMemo(() => {
+    const map = new Map<string, CalendarEvent[]>()
+    allEvents.forEach(event => {
+      const dateKey = format(new Date(event.date), 'yyyy-MM-dd')
+      if (!map.has(dateKey)) {
+        map.set(dateKey, [])
+      }
+      map.get(dateKey)!.push(event)
     })
-  }
+    return map
+  }, [allEvents])
 
   const navigateMonth = (direction: "prev" | "next") => {
-    setCurrentDate(direction === "prev" ? subMonths(currentDate, 1) : addMonths(currentDate, 1))
+    onCurrentDateChange(direction === "prev" ? subMonths(currentDate, 1) : addMonths(currentDate, 1))
   }
 
   const goToToday = () => {
-    setCurrentDate(new Date())
+    onCurrentDateChange(new Date())
   }
 
   const handleEventClick = (event: CalendarEvent) => {
@@ -113,14 +149,15 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
         {/* Calendar Body */}
         <div className="grid grid-cols-7 flex-1">
           {calendarDays.map(day => {
-            const dayEvents = getEventsForDay(day)
+            const dateKey = format(day, 'yyyy-MM-dd')
+            const dayEvents = eventsByDate.get(dateKey) || []
             const isCurrentMonth = isSameMonth(day, currentDate)
             const isDayToday = isToday(day)
             const isSelected = selectedDate && isSameDay(day, selectedDate)
 
             return (
               <div
-                key={day.toISOString()}
+                key={day.getTime()}
                 className={cn(
                   "min-h-30 border-r border-b last:border-r-0 p-2 cursor-pointer transition-colors",
                   isCurrentMonth ? "bg-background hover:bg-accent/50" : "bg-muted/30 text-muted-foreground",
@@ -166,7 +203,7 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
                         </div>
                       ))}
                       {dayEvents.length > 2 && (
-                        <div 
+                        <div
                           className="text-xs text-muted-foreground px-2 font-medium cursor-pointer hover:text-foreground transition-colors"
                           onClick={(e) => {
                             e.stopPropagation()
@@ -188,17 +225,19 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
     )
   }
 
-  const renderListView = () => {
-    const upcomingEvents = allEvents
+  const upcomingEvents = useMemo(() => {
+    return allEvents
       .filter(event => event.date >= new Date())
       .sort((a, b) => a.date.getTime() - b.date.getTime())
+  }, [allEvents])
 
+  const renderListView = () => {
     return (
       <div className="flex-1 p-6">
         <div className="space-y-4">
           {upcomingEvents.length === 0 ? (
             <div className="text-center text-muted-foreground py-8">
-              No upcoming events
+              No upcoming transactions
             </div>
           ) : (
             upcomingEvents.map((event) => (
@@ -280,7 +319,12 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
           {/* Search */}
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <Input placeholder="Search events..." className="pl-10 w-64" />
+            <Input
+              placeholder="Search transactions..."
+              className="pl-10 w-64"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
 
           {/* View Mode Toggle */}
@@ -320,9 +364,9 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
       <Dialog open={showEventDialog} onOpenChange={setShowEventDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{selectedEvent?.title || "Event Details"}</DialogTitle>
+            <DialogTitle>{selectedEvent?.title || "Transaction Details"}</DialogTitle>
             <DialogDescription>
-              View and manage this calendar event
+              View and manage this transaction
             </DialogDescription>
           </DialogHeader>
           {selectedEvent && (
@@ -359,21 +403,21 @@ export function CalendarMain({ selectedDate, onDateSelect, onMenuClick, events, 
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {selectedDayDate 
+              {selectedDayDate
                 ? format(selectedDayDate, 'EEEE, MMMM d, yyyy')
                 : 'Events'}
             </DialogTitle>
             <DialogDescription>
-              {selectedDayEvents.length === 0 
+              {selectedDayEvents.length === 0
                 ? "There is no transaction occurred or scheduled today"
-                : `${selectedDayEvents.length} event${selectedDayEvents.length !== 1 ? 's' : ''} on this day`}
+                : `${selectedDayEvents.length} transaction${selectedDayEvents.length !== 1 ? 's' : ''} on this day`}
             </DialogDescription>
           </DialogHeader>
           {selectedDayEvents.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12">
               <CalendarIcon className="w-12 h-12 text-muted-foreground mb-4" />
               <p className="text-center text-muted-foreground">
-                No events scheduled for this day
+                No transactions scheduled for this day
               </p>
             </div>
           ) : (

@@ -14,19 +14,19 @@ import { Skeleton } from "@/components/ui/skeleton"
 const chartConfig = {
   balance: {
     label: "Current Balance",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
   initialBalance: {
     label: "Initial Balance",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
   growth: {
     label: "Growth",
-    color: "hsl(var(--chart-3))",
+    color: "var(--chart-3)",
   },
 }
 
-export function CustomerInsights() {
+export function FinancialInsights() {
   const { data: accounts, loading: accountsLoading } = useAccounts()
   const { data: transactions, loading: transactionsLoading } = useTransactions()
   const [selectedTab, setSelectedTab] = useState("accounts")
@@ -44,7 +44,7 @@ export function CustomerInsights() {
     const totalAccounts = accounts.length
     const totalBalance = accounts.reduce((sum, acc) => sum + (acc.currentBalance || 0), 0)
     const avgBalance = totalAccounts > 0 ? totalBalance / totalAccounts : 0
-    
+
     // Calculate accounts with positive growth
     const growthAccounts = accounts.filter(
       acc => (acc.currentBalance || 0) > (acc.initialBalance || 0)
@@ -188,7 +188,7 @@ export function CustomerInsights() {
             ) : (
               <div className="mt-6">
                 <h3 className="text-sm font-medium text-muted-foreground mb-4">Top Spending Categories</h3>
-                
+
                 {categoryMetrics.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     No transaction data available

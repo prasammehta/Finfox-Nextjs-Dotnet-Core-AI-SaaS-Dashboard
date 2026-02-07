@@ -22,13 +22,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { UserObject } from "@/types/schema"
+import { User } from "@/types/schema"
 import { userFormSchema, type UserFormValues } from "@/types/zod-schema"
 import { createUser, updateUser } from "@/services/userService"
 import { Loader2 } from "lucide-react"
 
 interface UserFormDialogProps {
-  user?: UserObject | null
+  user?: User | null
   open?: boolean
   onOpenChange?: (open: boolean) => void
   onSuccess?: () => void

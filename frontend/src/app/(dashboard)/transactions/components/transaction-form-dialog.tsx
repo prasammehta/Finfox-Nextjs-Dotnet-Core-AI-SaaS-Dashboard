@@ -35,6 +35,7 @@ import { transactionFormSchema, type TransactionFormValues } from "@/types/zod-s
 import { createTransaction, updateTransaction } from "@/services/transactionService"
 import { toast } from "sonner"
 import { Transaction } from "@/types/schema"
+import { toUtcMidnight } from "@/lib/date-utils"
 
 interface Account {
   accountId: number
@@ -50,8 +51,8 @@ interface TransactionFormDialogProps {
   children?: React.ReactNode
 }
 
-export function TransactionFormDialog({ 
-  accounts, 
+export function TransactionFormDialog({
+  accounts,
   transaction = null,
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
@@ -60,7 +61,7 @@ export function TransactionFormDialog({
 }: TransactionFormDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Use controlled or internal state
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen
   const onOpenChange = controlledOnOpenChange || setInternalOpen
@@ -71,6 +72,7 @@ export function TransactionFormDialog({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
       amount: "",
+      date: new Date().toLocaleDateString('en-CA'),
       description: "",
       type: "",
       category: "",
@@ -83,6 +85,7 @@ export function TransactionFormDialog({
     if (transaction && open && isEditMode) {
       form.reset({
         amount: transaction.amount.toString(),
+        date: transaction.date?.split("T")[0] || new Date().toISOString().split("T")[0],
         description: transaction.description || "",
         type: transaction.type,
         category: transaction.category,
@@ -91,6 +94,7 @@ export function TransactionFormDialog({
     } else if (open && !isEditMode) {
       form.reset({
         amount: "",
+        date: new Date().toLocaleDateString('en-CA'),
         description: "",
         type: "",
         category: "",
@@ -102,12 +106,13 @@ export function TransactionFormDialog({
   async function onSubmit(data: TransactionFormValues) {
     try {
       setIsSubmitting(true)
-      
+
       if (isEditMode && transaction) {
         // Edit mode
         const transactionData = {
           transactionId: transaction.transactionId,
           amount: parseFloat(data.amount),
+          date: toUtcMidnight(data.date),
           description: data.description,
           type: data.type,
           category: data.category,
@@ -127,7 +132,7 @@ export function TransactionFormDialog({
         const transactionData = {
           userId: JSON.parse(currentUser).userId,
           amount: parseFloat(data.amount),
-          date: new Date().toISOString(),
+          date: toUtcMidnight(data.date),
           description: data.description,
           type: data.type,
           category: data.category,
@@ -158,8 +163,8 @@ export function TransactionFormDialog({
             {isEditMode ? "✏️ Edit Transaction" : "➕ Add New Transaction"}
           </DialogTitle>
           <DialogDescription>
-            {isEditMode 
-              ? "Update the transaction details below." 
+            {isEditMode
+              ? "Update the transaction details below."
               : "Create a new transaction. Fill in all the required fields."}
           </DialogDescription>
         </DialogHeader>
@@ -175,12 +180,12 @@ export function TransactionFormDialog({
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-muted-foreground">Amount (₹)</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="0.00" 
-                        type="number" 
+                      <Input
+                        placeholder="0.00"
+                        type="number"
                         step="0.01"
                         className="text-2xl font-bold border-0 bg-transparent focus:ring-0 p-0"
-                        {...field} 
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -189,23 +194,42 @@ export function TransactionFormDialog({
               />
             </div>
 
-            {/* Description */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="e.g., Weekly groceries, Office supplies..."
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Date and Description */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="cursor-pointer"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g., Weekly groceries..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Type and Category Grid */}
             <div className="grid grid-cols-2 gap-4">
@@ -274,8 +298,8 @@ export function TransactionFormDialog({
                     </FormControl>
                     <SelectContent>
                       {accounts.map((account) => (
-                        <SelectItem 
-                          key={account.accountId} 
+                        <SelectItem
+                          key={account.accountId}
                           value={account.accountId.toString()}
                           className="cursor-pointer"
                         >
@@ -290,7 +314,7 @@ export function TransactionFormDialog({
             />
 
             <DialogFooter className="pt-4">
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
@@ -298,13 +322,13 @@ export function TransactionFormDialog({
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isSubmitting}
                 className="cursor-pointer"
               >
-                {isSubmitting 
-                  ? isEditMode ? "Updating..." : "Creating..." 
+                {isSubmitting
+                  ? isEditMode ? "Updating..." : "Creating..."
                   : isEditMode ? "Update Transaction" : "Create Transaction"}
               </Button>
             </DialogFooter>

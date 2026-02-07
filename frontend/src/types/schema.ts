@@ -27,6 +27,8 @@ export interface User {
   userId: string
   name: string
   email: string
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface UserObject {
@@ -411,7 +413,7 @@ export interface AppUser {
 
 export interface CreateUserRequest {
   name: string
-  email: string 
+  email: string
   password: string
 
 }

@@ -8,21 +8,23 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
 interface CalendarSidebarProps {
+  currentDate?: Date
+  onCurrentDateChange?: (date: Date) => void
   selectedDate?: Date
   onDateSelect?: (date: Date) => void
   onNewCalendar?: () => void
-  onNewEvent?: () => void
   events?: Array<{ date: Date; count: number }>
   className?: string
   onCalendarToggle?: (calendarId: string, visible: boolean) => void
   visibleCalendars?: Record<string, boolean>
 }
 
-export function CalendarSidebar({ 
+export function CalendarSidebar({
+  currentDate,
+  onCurrentDateChange,
   selectedDate,
   onDateSelect,
   onNewCalendar,
-  onNewEvent,
   events = [],
   className,
   onCalendarToggle,
@@ -30,19 +32,10 @@ export function CalendarSidebar({
 }: CalendarSidebarProps) {
   return (
     <div className={`flex flex-col h-full bg-background rounded-lg ${className}`}>
-      {/* Add New Event Button */}
-      <div className="p-6 border-b">
-        <Button 
-          className="w-full cursor-pointer"
-          onClick={onNewEvent}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add New Event
-        </Button>
-      </div>
-
       {/* Date Picker */}
       <DatePicker
+        currentDate={currentDate}
+        onMonthChange={onCurrentDateChange}
         selectedDate={selectedDate}
         onDateSelect={onDateSelect}
         events={events}
@@ -52,7 +45,7 @@ export function CalendarSidebar({
 
       {/* Calendars */}
       <div className="flex-1 p-4">
-        <Calendars 
+        <Calendars
           onNewCalendar={onNewCalendar}
           onCalendarToggle={onCalendarToggle}
           visibleCalendars={visibleCalendars}
@@ -67,8 +60,8 @@ export function CalendarSidebar({
 
       {/* Footer */}
       <div className="p-4 border-t">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="w-full justify-start cursor-pointer"
           onClick={onNewCalendar}
         >

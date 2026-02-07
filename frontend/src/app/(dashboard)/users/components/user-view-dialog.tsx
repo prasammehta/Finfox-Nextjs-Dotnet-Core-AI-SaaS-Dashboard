@@ -11,10 +11,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { UserObject } from "@/types/schema"
+import { User } from "@/types/schema"
 
 interface UserViewDialogProps {
-  user: UserObject | null
+  user: User | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -103,14 +103,16 @@ export function UserViewDialog({
 
           {/* Date Information */}
           <div className="space-y-3">
-            <div>
-              <p className="text-xs font-medium text-muted-foreground mb-1">
-                Account Created
-              </p>
-              <p className="text-sm text-foreground">
-                {formatDate(user.createdAt)}
-              </p>
-            </div>
+            {user.createdAt && (
+              <div>
+                <p className="text-xs font-medium text-muted-foreground mb-1">
+                  Account Created
+                </p>
+                <p className="text-sm text-foreground">
+                  {formatDate(user.createdAt)}
+                </p>
+              </div>
+            )}
             {user.updatedAt && (
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">

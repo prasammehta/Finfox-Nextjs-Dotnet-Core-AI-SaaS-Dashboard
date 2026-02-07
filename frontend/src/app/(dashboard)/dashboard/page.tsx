@@ -1,13 +1,16 @@
 import { MetricsOverview } from "./components/metrics-overview"
-import { SalesChart } from "./components/sales-chart"
+import { IncomeExpenseChart } from "./components/income-expense-chart"
 import { RecentTransactions } from "./components/recent-transactions"
-import { CustomerInsights } from "./components/customer-insights"
+import { FinancialInsights } from "./components/financial-insights"
 import { QuickActions } from "./components/quick-actions"
 import { RevenueBreakdown } from "./components/revenue-breakdown"
+import { AssetAllocationChart } from "./components/asset-allocation"
+import { WeeklyActivityChart } from "./components/weekly-activity"
+import { InvestmentPerformanceChart } from "./components/investment-performance"
 
 export default function Dashboard() {
   return (
-    <div className="flex-1 space-y-6 px-6 pt-0">
+    <div className="flex-1 space-y-6 px-6 pt-0 pb-10">
       {/* Enhanced Header */}
       <div className="flex md:flex-row flex-col md:items-center justify-between gap-4 md:gap-6">
         <div className="flex flex-col gap-2">
@@ -24,16 +27,23 @@ export default function Dashboard() {
         {/* Top Row - Key Financial Metrics */}
         <MetricsOverview />
 
-        {/* Second Row - Charts in 2 columns */}
-        <div className="grid gap-6 grid-cols-1 @5xl:grid-cols-2">
-          <SalesChart />
+        {/* Section 1: Overview & Allocation */}
+        <div className="grid gap-6 grid-cols-1 @4xl:grid-cols-2 @7xl:grid-cols-3">
+          <AssetAllocationChart />
           <RevenueBreakdown />
+          <IncomeExpenseChart />
         </div>
 
-        {/* Third Row - Two Column Layout */}
+        {/* Section 3: Insights & Transactions */}
         <div className="grid gap-6 grid-cols-1 @5xl:grid-cols-2">
+          <FinancialInsights />
           <RecentTransactions />
-          <CustomerInsights />
+        </div>
+
+        {/* Section 4: Activity & Performance */}
+        <div className="grid gap-6 grid-cols-1 @5xl:grid-cols-2">
+          <WeeklyActivityChart />
+          <InvestmentPerformanceChart />
         </div>
       </div>
     </div>

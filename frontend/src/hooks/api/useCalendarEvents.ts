@@ -27,7 +27,8 @@ interface UseCalendarEventsReturn {
 
 function generateRecurringTransactionDates(
   recurringTransaction: any,
-  monthsToGenerate: number = 12
+  startDateRange?: Date,
+  endDateRange?: Date
 ): Date[] {
   const dates: Date[] = []
   const today = new Date()
@@ -35,15 +36,19 @@ function generateRecurringTransactionDates(
   const endDate = recurringTransaction.endDate ? new Date(recurringTransaction.endDate) : null
 
   const currentDate = new Date(startDate)
-  const maxDate = new Date(today.getFullYear(), today.getMonth() + monthsToGenerate, 0)
+  const maxDate = endDateRange || new Date(today.getFullYear(), today.getMonth() + 12, 0)
+  const minDate = startDateRange || startDate
 
   while (currentDate <= maxDate && (!endDate || currentDate <= endDate)) {
-    if (currentDate >= startDate) {
+    if (currentDate >= minDate && currentDate >= startDate) {
       dates.push(new Date(currentDate))
     }
 
     // Increment based on frequency
     switch (recurringTransaction.frequency) {
+      case "DAILY":
+        currentDate.setDate(currentDate.getDate() + 1)
+        break
       case "WEEKLY":
         currentDate.setDate(currentDate.getDate() + 7)
         break
@@ -54,15 +59,21 @@ function generateRecurringTransactionDates(
         currentDate.setFullYear(currentDate.getFullYear() + 1)
         break
       default:
+        currentDate.setMonth(currentDate.getMonth() + 1)
         break
     }
+
+    // Safety break for invalid frequencies or infinite loops
+    if (dates.length > 1000) break
   }
 
   return dates
 }
 
 function convertTransactionToCalendarEvent(transaction: any): CalendarEvent {
-  const date = new Date(transaction.createdAt)
+  // Use transaction date instead of createdAt for the calendar
+  // If it's a date-only string like "YYYY-MM-DD", parse it correctly
+  const date = new Date(transaction.date || transaction.createdAt)
 
   return {
     id: transaction.transactionId,
@@ -96,11 +107,44 @@ function convertRecurringTransactionToCalendarEvent(
   }
 }
 
-export function useCalendarEvents(): UseCalendarEventsReturn {
-  const { data: transactions, loading: transactionsLoading, error: transactionsError } = useTransactions()
-  const { data: recurringTransactions, loading: recurringLoading, error: recurringError } = useRecurringTransactions()
+export function useCalendarEvents(
+  range?: { startDate?: Date; endDate?: Date }
+): UseCalendarEventsReturn {
+  const {
+    data: transactions,
+    loading: transactionsLoading,
+    error: transactionsError,
+    setFilters: setTransactionFilters
+  } = useTransactions(
+    range ? {
+      startDate: range.startDate?.toLocaleDateString('en-CA'),
+      endDate: range.endDate?.toLocaleDateString('en-CA')
+    } : undefined,
+    1000 // Calendar needs more data
+  )
+
+  const {
+    data: recurringTransactions,
+    loading: recurringLoading,
+    error: recurringError,
+    setFilters: setRecurringFilters
+  } = useRecurringTransactions(
+    undefined, // We filter recurring transactions differently (generate occurrences)
+    1000
+  )
+
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [eventDates, setEventDates] = useState<Array<{ date: Date; count: number }>>([])
+
+  // Update filters when range changes
+  useEffect(() => {
+    if (range) {
+      setTransactionFilters({
+        startDate: range.startDate?.toLocaleDateString('en-CA'),
+        endDate: range.endDate?.toLocaleDateString('en-CA')
+      })
+    }
+  }, [range, setTransactionFilters])
 
   useEffect(() => {
     if (transactionsLoading || recurringLoading) return
@@ -124,7 +168,11 @@ export function useCalendarEvents(): UseCalendarEventsReturn {
       // Add recurring transaction occurrences
       if (Array.isArray(recurringTransactions)) {
         recurringTransactions.forEach((recurringTransaction) => {
-          const occurrenceDates = generateRecurringTransactionDates(recurringTransaction)
+          const occurrenceDates = generateRecurringTransactionDates(
+            recurringTransaction,
+            range?.startDate,
+            range?.endDate
+          )
           occurrenceDates.forEach((date) => {
             const event = convertRecurringTransactionToCalendarEvent(recurringTransaction, date)
             allEvents.push(event)
@@ -150,7 +198,7 @@ export function useCalendarEvents(): UseCalendarEventsReturn {
       console.error(errorMessage, err)
       toast.error(errorMessage)
     }
-  }, [transactions, recurringTransactions, transactionsLoading, recurringLoading])
+  }, [transactions, recurringTransactions, transactionsLoading, recurringLoading, range?.startDate, range?.endDate])
 
   return {
     events,

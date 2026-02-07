@@ -4,11 +4,13 @@ import { useState, useCallback, useEffect } from "react"
 import { type CalendarEvent } from "@/hooks/api/useCalendarEvents"
 
 export interface UseCalendarReturn {
+  currentDate: Date
   selectedDate: Date
   showEventForm: boolean
   editingEvent: CalendarEvent | null
   showCalendarSheet: boolean
   events: CalendarEvent[]
+  setCurrentDate: (date: Date) => void
   setSelectedDate: (date: Date) => void
   setShowEventForm: (open: boolean) => void
   setEditingEvent: (event: CalendarEvent | null) => void
@@ -22,6 +24,7 @@ export interface UseCalendarReturn {
 }
 
 export function useCalendar(initialEvents: CalendarEvent[] = []): UseCalendarReturn {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date())
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [showEventForm, setShowEventForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
@@ -35,6 +38,7 @@ export function useCalendar(initialEvents: CalendarEvent[] = []): UseCalendarRet
 
   const handleDateSelect = useCallback((date: Date) => {
     setSelectedDate(date)
+    setCurrentDate(date)
     // Auto-close mobile sheet when date is selected
     setShowCalendarSheet(false)
   }, [])
@@ -70,12 +74,14 @@ export function useCalendar(initialEvents: CalendarEvent[] = []): UseCalendarRet
 
   return {
     // State
+    currentDate,
     selectedDate,
     showEventForm,
     editingEvent,
     showCalendarSheet,
     events,
     // Setters
+    setCurrentDate,
     setSelectedDate,
     setShowEventForm,
     setEditingEvent,

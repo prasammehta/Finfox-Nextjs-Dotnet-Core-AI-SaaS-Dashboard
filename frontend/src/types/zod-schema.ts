@@ -26,6 +26,9 @@ export const transactionFormSchema = z.object({
   amount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Amount must be a positive number.",
   }),
+  date: z.string().min(1, {
+    message: "Please select a date.",
+  }),
   description: z.string().min(3, {
     message: "Description must be at least 3 characters.",
   }),

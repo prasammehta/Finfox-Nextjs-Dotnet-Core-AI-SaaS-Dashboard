@@ -140,7 +140,7 @@ export function TransactionViewDialog({
           {/* Date Information */}
           <div>
             <p className="text-xs font-medium text-muted-foreground mb-2">Transaction Date</p>
-            <p className="text-sm text-foreground">{formatDate(transaction.createdAt)}</p>
+            <p className="text-sm text-foreground">{formatDate(transaction.date)}</p>
           </div>
 
           {/* Additional Details */}
@@ -161,8 +161,8 @@ export function TransactionViewDialog({
 
           {/* Close Button */}
           <div className="flex justify-end pt-4">
-            <Button 
-              onClick={() => onOpenChange(false)} 
+            <Button
+              onClick={() => onOpenChange(false)}
               className="cursor-pointer"
             >
               Close

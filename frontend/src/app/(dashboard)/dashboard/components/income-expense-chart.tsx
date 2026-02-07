@@ -12,26 +12,26 @@ import { Skeleton } from "@/components/ui/skeleton"
 const chartConfig = {
   income: {
     label: "Income",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
   expense: {
     label: "Expenses",
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-5)",
   },
 }
 
-export function SalesChart() {
+export function IncomeExpenseChart() {
   const { data: transactions, loading } = useTransactions()
   const [timeRange, setTimeRange] = useState("6m")
 
   const chartData = useMemo(() => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     const currentMonth = new Date().getMonth()
-    
+
     // Determine how many months to show based on selection
     const monthsToShow = timeRange === "3m" ? 3 : timeRange === "1m" ? 1 : 6
     const startMonth = Math.max(0, currentMonth - monthsToShow + 1)
-    
+
     const data = months.slice(startMonth, currentMonth + 1).map(month => ({
       month,
       income: 0,
@@ -43,7 +43,7 @@ export function SalesChart() {
       transactions.forEach(transaction => {
         const txDate = new Date(transaction.createdAt)
         const txMonth = txDate.getMonth()
-        
+
         // Only include if within our range
         if (txMonth >= startMonth && txMonth <= currentMonth) {
           const monthIndex = txMonth - startMonth
@@ -97,21 +97,21 @@ export function SalesChart() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
-                <XAxis 
-                  dataKey="month" 
+                <XAxis
+                  dataKey="month"
                   axisLine={false}
                   tickLine={false}
                   className="text-xs"
                   tick={{ fontSize: 12 }}
                 />
-                <YAxis 
+                <YAxis
                   axisLine={false}
                   tickLine={false}
                   className="text-xs"
                   tick={{ fontSize: 12 }}
                   tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}k`}
                 />
-                <ChartTooltip 
+                <ChartTooltip
                   content={<ChartTooltipContent />}
                   formatter={(value: number) => `₹${value.toLocaleString("en-IN", { maximumFractionDigits: 0 })}`}
                 />

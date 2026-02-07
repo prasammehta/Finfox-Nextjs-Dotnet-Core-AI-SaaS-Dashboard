@@ -5,21 +5,25 @@ import { toast } from "sonner"
 import { Transaction } from "@/types/schema"
 import { getTransactions, deleteTransaction, getAllTransactions } from "@/services/transactionService"
 
-export function useTransactions(filters?: {
-  type?: string
-  category?: string
-  startDate?: string
-  endDate?: string
-  fromAccountId?: string | number
-  amountGreaterThan?: string | number
-  amountLessThan?: string | number
-  description?: string
-}) {
+export function useTransactions(
+  initialFilters?: {
+    type?: string
+    category?: string
+    startDate?: string
+    endDate?: string
+    fromAccountId?: string | number
+    amountGreaterThan?: string | number
+    amountLessThan?: string | number
+    description?: string
+  },
+  initialPageSize = 10
+) {
+  const [filters, setFilters] = useState(initialFilters)
   const [data, setData] = useState<Transaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pageIndex, setPageIndex] = useState(0)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(initialPageSize)
   const [totalCount, setTotalCount] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const [hasPreviousPage, setHasPreviousPage] = useState(false)
@@ -91,5 +95,7 @@ export function useTransactions(filters?: {
     hasNextPage,
     setPageIndex,
     setPageSize,
+    filters,
+    setFilters
   }
 }

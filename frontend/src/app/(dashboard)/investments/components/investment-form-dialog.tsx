@@ -34,6 +34,7 @@ import { investmentFormSchema, type InvestmentFormValues } from "@/types/zod-sch
 import { createInvestment, updateInvestment } from "@/services/investmentService"
 import { toast } from "sonner"
 import { Investment } from "@/types/schema"
+import { toUtcMidnight, getLocalDateString } from "@/lib/date-utils"
 
 interface InvestmentFormDialogProps {
   investment?: Investment | null
@@ -43,7 +44,7 @@ interface InvestmentFormDialogProps {
   children?: React.ReactNode
 }
 
-export function InvestmentFormDialog({ 
+export function InvestmentFormDialog({
   investment = null,
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
@@ -52,7 +53,7 @@ export function InvestmentFormDialog({
 }: InvestmentFormDialogProps) {
   const [internalOpen, setInternalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Use controlled or internal state
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen
   const onOpenChange = controlledOnOpenChange || setInternalOpen
@@ -66,7 +67,7 @@ export function InvestmentFormDialog({
       type: "",
       initialAmount: "",
       currentValue: "",
-      dateAcquired: "",
+      dateAcquired: getLocalDateString(),
     },
   })
 
@@ -86,7 +87,7 @@ export function InvestmentFormDialog({
         type: "",
         initialAmount: "",
         currentValue: "",
-        dateAcquired: "",
+        dateAcquired: getLocalDateString(),
       })
     }
   }, [investment, open, isEditMode, form])
@@ -94,7 +95,7 @@ export function InvestmentFormDialog({
   async function onSubmit(data: InvestmentFormValues) {
     try {
       setIsSubmitting(true)
-      
+
       if (isEditMode && investment) {
         // Edit mode
         const investmentData = {
@@ -103,7 +104,7 @@ export function InvestmentFormDialog({
           type: data.type,
           initialAmount: parseFloat(data.initialAmount),
           currentValue: parseFloat(data.currentValue),
-          dateAcquired: new Date(data.dateAcquired).toISOString(),
+          dateAcquired: toUtcMidnight(data.dateAcquired),
         }
 
         await updateInvestment(investment.investmentId, investmentData)
@@ -122,7 +123,7 @@ export function InvestmentFormDialog({
           type: data.type,
           initialAmount: parseFloat(data.initialAmount),
           currentValue: parseFloat(data.currentValue),
-          dateAcquired: new Date(data.dateAcquired).toISOString(),
+          dateAcquired: toUtcMidnight(data.dateAcquired),
         }
 
         await createInvestment(investmentData)
@@ -152,15 +153,15 @@ export function InvestmentFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
-     
+
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {isEditMode ? "✏️ Edit Investment" : "➕ Add New Investment"}
           </DialogTitle>
           <DialogDescription>
-            {isEditMode 
-              ? "Update the investment details below." 
+            {isEditMode
+              ? "Update the investment details below."
               : "Create a new investment. Fill in all the required fields."}
           </DialogDescription>
         </DialogHeader>
@@ -175,9 +176,9 @@ export function InvestmentFormDialog({
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-muted-foreground">Investment Name</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="e.g., Apple Stock, Bitcoin, etc." 
-                      {...field} 
+                    <Input
+                      placeholder="e.g., Apple Stock, Bitcoin, etc."
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -257,7 +258,7 @@ export function InvestmentFormDialog({
             </div>
 
             <DialogFooter className="pt-4">
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
@@ -265,13 +266,13 @@ export function InvestmentFormDialog({
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isSubmitting}
                 className="cursor-pointer"
               >
-                {isSubmitting 
-                  ? isEditMode ? "Updating..." : "Creating..." 
+                {isSubmitting
+                  ? isEditMode ? "Updating..." : "Creating..."
                   : isEditMode ? "Update Investment" : "Create Investment"}
               </Button>
             </DialogFooter>

@@ -5,22 +5,26 @@ import { RecurringTransaction } from "@/types/schema"
 import { getRecurringTransactions, deleteRecurringTransaction, getAllRecurringTransactions } from "@/services/recurringTransactionService"
 import { toast } from "sonner"
 
-export function useRecurringTransactions(filters?: {
-  description?: string
-  amountGreaterThan?: string | number
-  amountLessThan?: string | number
-  frequency?: string
-  category?: string
-  type?: string
-  isActive?: boolean
-  startDate?: string
-  endDate?: string
-}) {
+export function useRecurringTransactions(
+  initialFilters?: {
+    description?: string
+    amountGreaterThan?: string | number
+    amountLessThan?: string | number
+    frequency?: string
+    category?: string
+    type?: string
+    isActive?: boolean
+    startDate?: string
+    endDate?: string
+  },
+  initialPageSize = 10
+) {
+  const [filters, setFilters] = useState(initialFilters)
   const [data, setData] = useState<RecurringTransaction[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pageIndex, setPageIndex] = useState(0)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(initialPageSize)
   const [totalCount, setTotalCount] = useState(0)
   const [totalPages, setTotalPages] = useState(1)
   const [hasPreviousPage, setHasPreviousPage] = useState(false)
@@ -92,5 +96,7 @@ export function useRecurringTransactions(filters?: {
     hasNextPage,
     setPageIndex,
     setPageSize,
+    filters,
+    setFilters
   }
 }

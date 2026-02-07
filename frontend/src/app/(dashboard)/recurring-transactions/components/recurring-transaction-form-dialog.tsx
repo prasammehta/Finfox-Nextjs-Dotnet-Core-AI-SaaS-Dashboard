@@ -34,6 +34,7 @@ import { recurringTransactionFormSchema, type RecurringTransactionFormValues } f
 import { createRecurringTransaction, updateRecurringTransaction } from "@/services/recurringTransactionService"
 import { toast } from "sonner"
 import { RecurringTransaction } from "@/types/schema"
+import { toUtcMidnight } from "@/lib/date-utils"
 
 interface RecurringTransactionFormDialogProps {
   recurringTransaction?: RecurringTransaction | null
@@ -58,6 +59,8 @@ const CATEGORIES = [
 ]
 
 const FREQUENCIES = [
+  { value: "ONCE", label: "Once" },
+  { value: "DAILY", label: "Daily" },
   { value: "WEEKLY", label: "Weekly" },
   { value: "MONTHLY", label: "Monthly" },
   { value: "YEARLY", label: "Yearly" },
@@ -92,7 +95,7 @@ export function RecurringTransactionFormDialog({
       category: "",
       frequency: "MONTHLY",
       type: "EXPENSE",
-      startDate: new Date().toISOString().split("T")[0],
+      startDate: new Date().toLocaleDateString('en-CA'),
       endDate: "",
       accountId: "1",
     },
@@ -118,7 +121,7 @@ export function RecurringTransactionFormDialog({
         category: "",
         frequency: "MONTHLY",
         type: "EXPENSE",
-        startDate: new Date().toISOString().split("T")[0],
+        startDate: new Date().toLocaleDateString('en-CA'),
         endDate: "",
         accountId: "1",
       })
@@ -138,8 +141,8 @@ export function RecurringTransactionFormDialog({
           category: data.category,
           frequency: data.frequency,
           type: data.type,
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: data.endDate ? new Date(data.endDate).toISOString() : undefined,
+          startDate: toUtcMidnight(data.startDate),
+          endDate: data.endDate ? toUtcMidnight(data.endDate) : undefined,
           accountId: parseInt(data.accountId),
         }
 
@@ -160,8 +163,8 @@ export function RecurringTransactionFormDialog({
           category: data.category,
           frequency: data.frequency,
           type: data.type,
-          startDate: new Date(data.startDate).toISOString(),
-          endDate: data.endDate ? new Date(data.endDate).toISOString() : undefined,
+          startDate: toUtcMidnight(data.startDate),
+          endDate: data.endDate ? toUtcMidnight(data.endDate) : undefined,
           accountId: parseInt(data.accountId),
         }
 
@@ -360,8 +363,8 @@ export function RecurringTransactionFormDialog({
                     </FormControl>
                     <SelectContent>
                       {accounts.map((account) => (
-                        <SelectItem 
-                          key={account.accountId} 
+                        <SelectItem
+                          key={account.accountId}
                           value={account.accountId.toString()}
                           className="cursor-pointer"
                         >

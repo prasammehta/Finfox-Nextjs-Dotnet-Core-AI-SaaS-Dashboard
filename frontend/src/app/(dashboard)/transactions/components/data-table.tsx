@@ -60,7 +60,7 @@ import { TransactionViewDialog } from "./transaction-view-dialog"
 import { MoreFiltersDialog } from "./more-filters-dialog"
 import { toast } from "sonner"
 import { exportTransactionsToExcel, deleteTransaction } from "@/services/transactionService"
-import { 
+import {
   type TransactionDT as Transaction,
   type AccountDTForTransactions as Account,
   type TransactionFormValuesDT as TransactionFormValues,
@@ -69,10 +69,10 @@ import {
 import type { Transaction as TransactionSchema } from "@/types/schema"
 import { TRANSACTION_TYPES, CATEGORIES, getTransactionTypeLabel, getCategoryLabel, getTypeColor, getCategoryColor } from "@/constants/enums"
 
-export function DataTable({ 
-  transactions, 
-  accounts, 
-  loading, 
+export function DataTable({
+  transactions,
+  accounts,
+  loading,
   pageIndex = 0,
   pageSize = 10,
   totalCount = 0,
@@ -81,8 +81,8 @@ export function DataTable({
   hasNextPage = false,
   onPageIndexChange,
   onPageSizeChange,
-  onDeleteTransaction, 
-  onEditTransaction, 
+  onDeleteTransaction,
+  onEditTransaction,
   onTransactionUpdated,
   typeFilter = "",
   setTypeFilter,
@@ -199,16 +199,35 @@ export function DataTable({
       size: 80,
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "date",
       header: "Date",
       cell: ({ row }) => {
-        const date = new Date(row.original.createdAt)
+        const date = new Date(row.original.date)
         return (
           <span className="text-sm">
             {date.toLocaleDateString("en-IN", {
               day: "2-digit",
               month: "short",
               year: "numeric",
+            })}
+          </span>
+        )
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const date = new Date(row.original.createdAt)
+        return (
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
+            {date.toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
             })}
           </span>
         )
@@ -288,9 +307,9 @@ export function DataTable({
         }
         return (
           <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="h-8 w-8 cursor-pointer"
               onClick={() => {
                 setSelectedTransaction(transactionSchema)
@@ -351,8 +370,8 @@ export function DataTable({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div></div>
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="cursor-pointer"
             onClick={handleExport}
             disabled={isExporting}
@@ -360,7 +379,7 @@ export function DataTable({
             <Download className="mr-2 size-4" />
             {isExporting ? "Exporting..." : "Export"}
           </Button>
-          <TransactionFormDialog 
+          <TransactionFormDialog
             accounts={accounts.map(acc => ({
               accountId: acc.accountId,
               name: acc.name
@@ -473,9 +492,9 @@ export function DataTable({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     )
                   })}
@@ -512,57 +531,57 @@ export function DataTable({
             </TableBody>
           </Table>
 
-          
+
         </div>
       )}
 
       <div className="flex items-center justify-between space-x-2 py-4">
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="page-size">Show</Label>
-              <Select value={`${pageSize}`} onValueChange={(value) => onPageSizeChange?.(Number(value))}>
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {[10, 20, 30, 40, 50].map((size) => (
-                    <SelectItem key={size} value={`${size}`}>
-                      {size}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="flex items-center space-x-2">
+          <Label htmlFor="page-size">Show</Label>
+          <Select value={`${pageSize}`} onValueChange={(value) => onPageSizeChange?.(Number(value))}>
+            <SelectTrigger className="w-20">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[10, 20, 30, 40, 50].map((size) => (
+                <SelectItem key={size} value={`${size}`}>
+                  {size}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-            <div className="flex-1 text-center text-sm text-muted-foreground">
-              Total: {totalCount} result(s)
-            </div>
+        <div className="flex-1 text-center text-sm text-muted-foreground">
+          Total: {totalCount} result(s)
+        </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onPageIndexChange?.(pageIndex - 1)}
-                disabled={!hasPreviousPage}
-              >
-                Previous
-              </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageIndexChange?.(pageIndex - 1)}
+            disabled={!hasPreviousPage}
+          >
+            Previous
+          </Button>
 
-              <span className="text-sm font-medium px-3 py-1 min-w-[100px] text-center">
-                Page {pageIndex + 1} of {totalPages}
-              </span>
+          <span className="text-sm font-medium px-3 py-1 min-w-[100px] text-center">
+            Page {pageIndex + 1} of {totalPages}
+          </span>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onPageIndexChange?.(pageIndex + 1)}
-                disabled={!hasNextPage}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageIndexChange?.(pageIndex + 1)}
+            disabled={!hasNextPage}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
 
-      <TransactionViewDialog 
+      <TransactionViewDialog
         transaction={selectedTransaction}
         accounts={accounts.map(acc => ({
           accountId: acc.accountId,
@@ -571,7 +590,7 @@ export function DataTable({
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
       />
-      
+
       <TransactionFormDialog
         transaction={selectedTransaction}
         accounts={accounts.map(acc => ({

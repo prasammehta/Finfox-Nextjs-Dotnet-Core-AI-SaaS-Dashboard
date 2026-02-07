@@ -37,7 +37,7 @@ import {
 const data = {
   user: {
     name: "Finfox",
-    email: "user@finfox.com",
+    email: "info@finfox.com",
     avatar: "",
   },
   navGroups: [

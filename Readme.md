@@ -26,6 +26,14 @@ Finfox is a comprehensive financial management platform that combines a modern w
 
 ---
 
+## 🎬 Demo
+
+**Live Application**: [https://finfox-nextjs-dotnet-core-ai-saa-s.vercel.app/](https://finfox-nextjs-dotnet-core-ai-saa-s.vercel.app/)
+
+**Test Credentials**:
+- **Email**: `admin@gmail.com`
+- **Password**: `pass123`
+
 ## 🏗️ Tech Stack
 
 ### Frontend
